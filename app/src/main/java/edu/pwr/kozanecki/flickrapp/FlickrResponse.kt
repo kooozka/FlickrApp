@@ -13,11 +13,11 @@ data class Photo(
     val title: String,
     val link: String,
     val media: Media,
-    val dateTaken: String,
+    val date_taken: String,
     val description: String,
     val published: String,
     val author: String,
-    val authorId: String,
+    val author_id: String,
     val tags: String
 )
 
