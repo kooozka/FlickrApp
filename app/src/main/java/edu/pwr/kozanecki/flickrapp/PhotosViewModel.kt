@@ -13,7 +13,7 @@ class PhotosViewModel(private val flickrApi: FlickrApi) : ViewModel() {
         fetchPhotos()
     }
 
-    fun fetchPhotos() {
+    private fun fetchPhotos() {
         viewModelScope.launch {
             isLoading.value = true
             photos.value = getPublicPhotos()
@@ -21,12 +21,11 @@ class PhotosViewModel(private val flickrApi: FlickrApi) : ViewModel() {
         }
     }
 
-    private suspend fun getPublicPhotos(): FlickrResponse {
-        var response: FlickrResponse? = null
-        try {
-            response = flickrApi.getPublicPhotos()
+    private suspend fun getPublicPhotos(): FlickrResponse? {
+        val response: FlickrResponse? = try {
+            flickrApi.getPublicPhotos()
         } catch (e: Exception) {
-            throw RuntimeException(e.message)
+            null
         }
         return response
     }

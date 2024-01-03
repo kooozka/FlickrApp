@@ -1,27 +1,29 @@
 package edu.pwr.kozanecki.flickrapp
 
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.Divider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
+import coil.annotation.ExperimentalCoilApi
 import coil.compose.rememberImagePainter
 import edu.pwr.kozanecki.flickrapp.ui.theme.FlickrAppTheme
 import retrofit2.Retrofit
@@ -47,6 +49,7 @@ class MainActivity : ComponentActivity() {
     }
 }
 
+@OptIn(ExperimentalCoilApi::class)
 @Composable
 fun PhotoCard(photo: Photo) {
     Column {
@@ -54,7 +57,7 @@ fun PhotoCard(photo: Photo) {
             text = photo.title,
             modifier = Modifier
                 .padding(8.dp)
-                .fillMaxWidth(),
+                .align(Alignment.CenterHorizontally),
             style = MaterialTheme.typography.titleLarge
         )
         Image(
@@ -62,16 +65,16 @@ fun PhotoCard(photo: Photo) {
             contentDescription = null,
             modifier = Modifier
                 .fillMaxWidth()
-                .height(250.dp),
+                .height(270.dp),
             contentScale = ContentScale.Crop
         )
         Text(
-            text = photo.author,
+            text = "author: " + photo.author,
             modifier = Modifier
                 .padding(8.dp)
-                .fillMaxWidth()
         )
         Spacer(modifier = Modifier.height(8.dp))
+        Divider()
     }
 }
 
@@ -82,11 +85,19 @@ fun PhotoList(viewModel: PhotosViewModel) {
 
     Column {
         if (isLoading) {
-            CircularProgressIndicator()
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .wrapContentSize(Alignment.Center)
+            ) {
+                CircularProgressIndicator()
+            }
         } else {
             LazyColumn {
-                items(photos!!.items.size) { index ->
-                    PhotoCard(photos.items[index])
+                if (photos != null) {
+                    items(photos.items.size) { index ->
+                        PhotoCard(photos.items[index])
+                    }
                 }
             }
         }
